@@ -10,6 +10,19 @@ var connection = mysql.createConnection({
   database : 'iot'
 });
 connection.connect();
+//------------------
+var MongoClient = require('mongodb').MongoClient;
+ 
+// Connection URL
+var url = 'mongodb://localhost:27017/iot';
+var dbObj = null;
+
+// Use connect method to connect to the Server
+MongoClient.connect(url, function(err, db) {
+  console.log("Connected correctly to server");
+  dbObj = db;
+});
+
 // haha end
 
 /* GET users listing. */
@@ -34,7 +47,28 @@ router.get('/:id', function(req, res, next){
 				res.send(JSON.stringify(err));
 			} else {
 				if( results.length > 0){
-					res.send(JSON.stringify(results[0]));
+					// Application Side Join-----------------
+					connection.query(
+						'select * from device where user_id=?',
+						[req.params.id],
+						function(err2, results2, fields2){
+							if(err2) res.send(JSON.stringify(err2));
+							else{
+								var logs = dbObj.collection('logs');
+								logs.find({user_id:Number(req.params.id)}).
+									toArray(function(err3, results3){
+										if(err3)
+											res.send(JSON.stringify(err3));
+										else{
+											results[0].devices = results2;
+											results[0].logs = results3;
+											res.send(JSON.stringify(results[0]));
+										}
+									});
+							}
+								
+						});
+						//------------------
 				} else {
 					res.send(JSON.stringify({}));
 				}
@@ -122,4 +156,6 @@ router.delete('/:id', function(req,res,next){
 		});
 	// res.send(JSON.stringify({id:req.params.id}));
 });
+
+
 module.exports = router;
