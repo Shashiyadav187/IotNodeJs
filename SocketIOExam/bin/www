@@ -24,9 +24,17 @@ var server = http.createServer(app);
 var users = []; // 사용자 목록
 var socketio = require('socket.io');
 var io = socketio.listen(server);
-io.sockets.on('close', function(socket){
+// for redis use
+var redis = require('redis');
+var subscriber = redis.createClient();
+var publisher = redis.createClient();
 
+io.sockets.on('close', function(socket){
+  subscriber.unsubscribe();
+  subscriber.close();
+  publisher.close();
 });
+
 io.sockets.on('connection', function(socket){
   console.log('connection!!');
   socket.on('chat_conn', function(raw_msg){
@@ -41,7 +49,35 @@ io.sockets.on('connection', function(socket){
         JSON.stringify({chat_id:msg.chat_id}));
     }
   });
+
+  socket.on('leave', function(raw_msg){
+    var msg = JSON.parse(raw_msg);
+    if( msg.chat_id != '' && msg.chat_id != undefined){
+      var index = users.indexOf(msg.chat_id);
+      if( index != -1){
+        users.splice(index,1);
+        socket.emit('chat_join',
+          JSON.stringify(users));
+        socket.broadcast.emit('chat_join',
+          JSON.stringify(users));
+      }
+    }
+  });
+  ///////////////// for redis I/F
+  // Redis ->Server ->Client
+  subscriber.subscribe('chat');
+  subscriber.on('message', function(channel, message){
+    socket.emit('message_go', message);
+  });
+  // client -> Server ->Redis
+  socket.on('message', function(raw_msg){
+    console.log('-----'+raw_msg);
+    var msg = JSON.parse(raw_msg); 
+    var chat_message = msg.chat_id+':'+msg.message;
+    publisher.publish('chat', chat_message);
+  });
 });
+
 
 /**
  * Listen on provided port, on all network interfaces.

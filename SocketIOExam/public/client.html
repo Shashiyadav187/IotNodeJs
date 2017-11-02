@@ -32,12 +32,34 @@
 				data = JSON.parse(data);
 				alert(data.chat_id+'님은 이미 접속된 ID입니다.');
 			});
+			socket.on('message_go', function(data){ // 메시지 수신 부분
+				data = decodeURIComponent(data);
+				data = data.replace(/&/g, '&amp;');
+				data = data.replace(/\'/g,'&quot;');
+				data = data.replace(/\'/g,'&#39;');
+				data = data.replace(/<'/g,'&lt;');
+				data = data.replace(/>'/g,'&gt;');
+				$("#chat_list").append("<li>"+data+"</li>");
+				$(".chat_list").scrollTop(
+					$("#chat_list").height());
+			});
 		});
-		function chat_input(){
-
+		// Client -> Server
+		function chat_input(){ // 메시지 전송부분
+			var encodedMsg = encodeURIComponent(
+				$("#chat_input").val());
+			socket.emit('message',
+				JSON.stringify({chat_id:chat_id,
+					message:encodedMsg}));
+			$("#chat_input").val('');
 		}
-		function chat_out(){
-
+		function chat_out(){ // 나가기
+			socket.emit('leave', JSON.stringify({chat_id:chat_id}));
+			$("#chat_id").val('ID 입력');
+			$("#chat_list").html('');
+			$("#chat_form").slideUp();
+			$("#chat_form_no").slideDown();
+			chat_id = '';
 		}
 		function chat_in(){
 			socket.emit('chat_conn',
