@@ -29,6 +29,23 @@ var redis = require('redis');
 var subscriber = redis.createClient();
 var publisher = redis.createClient();
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/chat');
+var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
+var ChatLogSchema = new Schema({
+  id:ObjectId,
+  log:String,
+  date:String
+  });
+var ChatLogModel = mongoose.model('chatlog', ChatLogSchema);
+
+var ChatListSchema = new Schema({
+  id:ObjectId,
+  message:String
+});
+var ChatListModel = mongoose.model('chatlist', ChatListSchema);
+//////////////////////////////////////////
+
 io.sockets.on('close', function(socket){
   subscriber.unsubscribe();
   subscriber.close();
@@ -44,6 +61,23 @@ io.sockets.on('connection', function(socket){
       users.push(msg.chat_id);
       socket.emit('chat_join', JSON.stringify(users));
       socket.broadcast.emit('chat_join', JSON.stringify(users));
+      //1. 기존 채팅 내용을 새로 로그인 한 사용자에게 전달
+      ChatListModel.find({}, function(err, results){
+        if(!err) socket.emit('message_list',
+          JSON.stringify(results));
+      });
+      //2. 새로운 사용자가 입장했음을 로그로 저장하고, 내용을 전달.
+      var chatLog = new ChatLogModel();
+      chatLog.log = msg.chat_id+'님이 접속했습니다.';
+      chatLog.date = new Date();
+      chatLog.save(function(err){
+        if(!err){
+          ChatLogModel.find({}, function(err, logs) {
+            socket.emit('log_list', JSON.stringify(logs));
+            socket.broadcast.emit('log_list',JSON.stringify(logs));
+          });
+        }
+      });
     }else{ // users에 존재함.--> 로그인 불가
       socket.emit('chat_fail',
         JSON.stringify({chat_id:msg.chat_id}));
@@ -56,10 +90,23 @@ io.sockets.on('connection', function(socket){
       var index = users.indexOf(msg.chat_id);
       if( index != -1){
         users.splice(index,1);
-        socket.emit('chat_join',
-          JSON.stringify(users));
-        socket.broadcast.emit('chat_join',
-          JSON.stringify(users));
+        socket.emit('someone_leaved',
+          JSON.stringify({users:users, leaved_chat_id:msg.chat_id}));
+        socket.broadcast.emit('someone_leaved',
+          JSON.stringify({users:users, leaved_chat_id:msg.chat_id}));
+        // 사용자가 퇴장한 정보를 저장하고, 모든 사용자에게 전송
+        var chatLog = new ChatLogModel();
+        chatLog.log = msg.chat_id+'님이 퇴장했습니다';
+        chatLog.date = new Date();
+        chatLog.save(function(err){
+          if(!err){
+            ChatLogModel.find({}, function(err, logs) {
+              socket.emit('log_list', JSON.stringify(logs));
+              socket.broadcast.emit('log_list',
+                JSON.stringify(logs));
+            });
+          }
+        });
       }
     }
   });
@@ -75,6 +122,9 @@ io.sockets.on('connection', function(socket){
     var msg = JSON.parse(raw_msg); 
     var chat_message = msg.chat_id+':'+msg.message;
     publisher.publish('chat', chat_message);
+    var chatList = new ChatListModel();
+    chatList.message = chat_message;
+    chatList.save(function(err){});
   });
 });
 
