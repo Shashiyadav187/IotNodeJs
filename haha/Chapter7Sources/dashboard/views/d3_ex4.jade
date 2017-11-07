@@ -1,0 +1,120 @@
+extends layout
+
+mixin metric(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-gauge2="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer
+      
+mixin metricBar(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar2(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar2="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar3(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar3="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar4(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar4="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar5(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar5="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+
+
+block styles
+  link(rel='stylesheet',href='/stylesheets/dashboard.css')
+  
+block scripts
+  script(src='/javascripts/dashboard.js')
+  script(src='/javascripts/counter.js')
+  script(src='/javascripts/d3.v3.min.js')
+  script(src='/javascripts/vega.min.js')  
+  script(src='/javascripts/d3.js')
+  script(src="/javascripts/vega.js")
+
+
+block content
+  div(class="container")
+    div.page-header: h1 D3 Example 5
+    div(class="row")
+      div(class="col-lg-3")
+        +metric("first","Metric 1","My First Metric")
+      div(class="col-lg-3")
+        +metric("second","Metric 2","Another Metric")
+      div(class="col-lg-6")
+        +metricBar4("third","Metric 3","A Bigger One")
+    div(class="row")
+      div(class="col-lg-6")
+        +metricBar4("m4")
+      div(class="col-lg-2")
+        +metric("m5")
+      div(class="col-lg-2")
+        +metric("m6")
+      div(class="col-lg-2")
+        +metric("m9")
+    

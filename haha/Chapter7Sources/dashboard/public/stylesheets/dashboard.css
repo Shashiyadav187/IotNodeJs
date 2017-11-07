@@ -1,0 +1,80 @@
+/* Carousel base class */
+.carousel {
+  min-height: 500px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 500px;
+  background-color: #777;
+}
+
+.metric {
+  background: none;
+}
+
+.metric h1 {
+  text-align: center;
+  font-size: 48px;
+}
+
+.metric h4 {
+  text-align: center;
+}
+
+.metric div.canvas-wrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.metric div.canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+}
+
+
+.metric div.value-wrap {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+
+path.back {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 25px;
+}
+path.front {
+  fill: none;
+  stroke: #aaa;
+  stroke-width: 25px;
+}
+
+path.d3back {
+  fill: #ccc;
+  stroke: none;
+}
+path.d3front {
+  fill: #aaa;
+  stroke: none;
+}
+
+svg.barchart rect {
+  fill: #ccc;
+  stroke: #aaa;
+}
+
+
+.axis text { font: 10px sans-serif; }
+.axis path, .axis line { 
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;  
+}

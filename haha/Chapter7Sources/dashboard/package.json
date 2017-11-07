@@ -1,0 +1,20 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "A basic streaming dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Byron Ellis",
+  "license": "None",
+  "dependencies": {
+    "express": "~3.4.4",
+    "jade": "~0.35.0",
+    "less-middleware": "~0.1.12",
+    "optimist": "~0.6.0",
+    "socket.io": "~0.9.16",
+    "redis": "~0.9.0",
+    "hiredis": "~0.1.15"
+  }
+}

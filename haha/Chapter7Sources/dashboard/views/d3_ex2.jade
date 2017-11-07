@@ -1,0 +1,76 @@
+extends layout
+
+mixin metric(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-gauge="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer
+      
+mixin metricBar(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar2(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar2="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+mixin metricBar3(id,title,footer)
+  div(class="panel panel-default",id="#{id}-metric" )
+    if title
+      div.panel-heading: h3.panel-title= title
+    div(class="panel-body metric")
+      div(class="canvas-wrap" data-counter-bar3="#{id}")
+      div(class="value-wrap")
+        h1(data-counter="#{id}")= "--"
+        h4
+          span.glyphicon(data-direction="#{id}")
+          span(data-change="#{id}")= ""
+    if footer
+      div.panel-footer= footer      
+
+
+
+block styles
+  link(rel='stylesheet',href='/stylesheets/dashboard.css')
+  
+block scripts
+  script(src='/javascripts/dashboard.js')
+  script(src='/javascripts/d3.v3.min.js')
+  script(src="/javascripts/d3_2.js")
+
+block content
+  div(class="container")
+    div.page-header: h1 D3 Example 3
+    div(class="row")
+      div(class="col-lg-12")
+        div(class="panel panel-default")
+          div(class="panel-body",id="streamgraph")
+    

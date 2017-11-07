@@ -1,0 +1,17 @@
+{
+  "name": "myproject",
+  "version": "1.0.0",
+  "description": "My first node.js project",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": "",
+  "author": "Byron Ellis",
+  "dependencies": {
+    "express": "3.4.4",
+    "jade": "~0.35.0",
+    "less-middleware": "~0.1.12",
+    "optimist": "~0.6.0"
+  }
+}
